@@ -22,7 +22,7 @@ class Nakanojyo
     if @html != ''
       @html.css('tr').each do |row|
         row.css('a').each do |a|
-          date = Time.parse(row.css('font').text.strip)
+          date = Time.parse(row.css('font').text.strip).to_s.gsub(/ \+0900$/, '')
           link = a.text.strip
           href = a['href'].strip
           if /^http:\/\// !~ href
