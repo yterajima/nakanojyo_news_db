@@ -33,10 +33,7 @@ class Nakanojyo
             if /^http:\/\// !~ href
               href = @base + href
             end
-
-            if date && link && href
-              @data.push({"date" => date, "link" => link, "href" => href})
-            end
+            @data.push({"date" => date, "link" => link, "href" => href})
           rescue
             next
           end
