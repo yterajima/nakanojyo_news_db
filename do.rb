@@ -1,11 +1,17 @@
 require "./nakanojyo"
 require "./db"
 
-town = Nakanojyo.new
-data = town.parse
 db   = Db.new
 
-data.each do |hash|
+news = Nakanojyo.new('info').parse
+news.each do |hash|
+  if !db.exist?(hash['link'], hash['date'])
+    db.insert(hash)
+  end
+end
+
+topix = Nakanojyo.new('topix').parse
+topix.each do |hash|
   if !db.exist?(hash['link'], hash['date'])
     db.insert(hash)
   end

@@ -3,9 +3,13 @@ require "open-uri"
 require "date"
 
 class Nakanojyo
-  def initialize
+  def initialize(mode = 'info')
     @base = "http://www.town.nakanojo.gunma.jp/~info/"
-    @url  = @base + "shinchaku.html"
+    if mode == 'info'
+      @url  = @base + "shinchaku.html"
+    else #topix
+      @url  = @base + "chu_moku.html"
+    end
     @data = Array.new
     self.get
   end
@@ -22,13 +26,20 @@ class Nakanojyo
     if @html != ''
       @html.css('tr').each do |row|
         row.css('a').each do |a|
-          date = Time.parse(row.css('font').text.strip).to_s.gsub(/ \+0900$/, '')
-          link = a.text.strip
-          href = a['href'].strip
-          if /^http:\/\// !~ href
-            href = @base + href
+          begin
+            date = Time.parse(row.css('font').text.strip).to_s.gsub(/ \+0900$/, '')
+            link = a.text.strip
+            href = a['href'].strip
+            if /^http:\/\// !~ href
+              href = @base + href
+            end
+
+            if date && link && href
+              @data.push({"date" => date, "link" => link, "href" => href})
+            end
+          rescue
+            next
           end
-          @data.push({"date" => date, "link" => link, "href" => href})
         end
       end
       @data
