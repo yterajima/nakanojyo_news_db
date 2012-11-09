@@ -28,6 +28,7 @@ class Nakanojyo
         row.css('a').each do |a|
           begin
             date = Time.parse(row.css('font').text.strip).to_s.gsub(/ \+0900$/, '')
+            date = date.strftime("%Y-%m-%d 00:00:00")
             link = a.text.strip
             href = a['href'].strip
             if /^http:\/\// !~ href
